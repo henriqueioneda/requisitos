@@ -1,4 +1,5 @@
 import com.google.gson.*;
+import com.triptheone.joda.Stopwatch;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -20,7 +21,7 @@ public class Requisitos {
 
     static class State {
         String name; double probability; boolean visited;
-        public State(String name, double probability, boolean visited) {
+        State(String name, double probability, boolean visited) {
             this.name = name;
             this.probability = probability;
             this.visited = visited;
@@ -39,6 +40,7 @@ public class Requisitos {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
+        Stopwatch s = Stopwatch.start();
         Gson gson = new Gson();
         FileReader reader = new FileReader("./src/transitions.json");
         List<Transition> transitions = Arrays.asList(gson.fromJson(reader, Transition[].class));
@@ -48,12 +50,13 @@ public class Requisitos {
             executeBfs(states, transitions, engine);
             states.forEach(state -> state.visited = false);
         }
-        states.forEach(state -> System.out.println(state));
+        states.forEach(System.out::println);
+        System.out.printf("Tempo de simulação: %s ms", s.getElapsedTime().getMillis());
     }
 
     private static void executeBfs(List<State> states, List<Transition> transitions, ScriptEngine engine) {
-        List<State> previousStates = new ArrayList<State>(states);
-        Queue<State> queue = new LinkedList<State>();
+        List<State> previousStates = new ArrayList<>(states);
+        Queue<State> queue = new LinkedList<>();
         State initialState = states.stream().filter(state -> Double.compare(state.probability, 1.0) == -1).findFirst().get();
         queue.add(initialState);
         while (!queue.isEmpty()) {
