@@ -1,0 +1,52 @@
+[
+  {
+    "from": "3OK",
+    "to": "2OK",
+    "chance": "l * t"
+  },
+  {
+    "from": "3OK",
+    "to": "M3",
+    "chance": "2 * l * t"
+  },
+  {
+    "from": "M3",
+    "to": "F",
+    "chance": "l * t"
+  },
+  {
+    "from": "2OK",
+    "to": "F",
+    "chance": "2 * l * t"
+  },
+  {
+    "from": "3OK",
+    "to": "3OK",
+    "chance": "1 - 3 * l * t"
+  },
+  {
+    "from": "2OK",
+    "to": "2OK",
+    "chance": " 1 - 2 * l * t"
+  },
+  {
+    "from": "M3",
+    "to": "M3",
+    "chance": "1 - l * t - m * t"
+  },
+  {
+    "from": "F",
+    "to": "F",
+    "chance": "1.0"
+  },
+  {
+    "from": "M3",
+    "to": "3OK",
+    "chance": "m * t"
+  },
+  {
+    "from": "2OK",
+    "to": "3OK",
+    "chance": "m * t"
+  }
+]
