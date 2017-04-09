@@ -27,7 +27,7 @@
   {
     "from": "2OK",
     "to": "2OK",
-    "chance": " 1 - 2 * l * t"
+    "chance": " 1 - 2 * l * t - m * t"
   },
   {
     "from": "M3",

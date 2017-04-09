@@ -46,7 +46,7 @@ public class Requisitos {
         List<Transition> transitions = Arrays.asList(gson.fromJson(reader, Transition[].class));
         List<State> states = statesFromTransitions(transitions);
         ScriptEngine engine = startScriptEvalEngine();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 2; i++) {
             executeBfs(states, transitions, engine);
             states.forEach(state -> state.visited = false);
         }
@@ -55,7 +55,7 @@ public class Requisitos {
     }
 
     private static void executeBfs(List<State> states, List<Transition> transitions, ScriptEngine engine) {
-        List<State> previousStates = new ArrayList<>(states);
+        List<State> previousStates = cloneStates(states);
         Queue<State> queue = new LinkedList<>();
         State initialState = states.stream().filter(state -> Double.compare(state.probability, 1.0) == -1).findFirst().get();
         queue.add(initialState);
@@ -65,10 +65,10 @@ public class Requisitos {
                 .filter(transition -> transition.from.equals(currentState.name))
                 .forEach(transition -> {
                     State neighbor = states.stream().filter(state -> state.name.equals(transition.to)).findFirst().get();
-                    State oldNeighbor = previousStates.stream().filter(state -> state.name.equals(neighbor.name)).findFirst().get();
+                    State oldCurrentState = previousStates.stream().filter(state -> state.name.equals(currentState.name)).findFirst().get();
                     try {
-                        double value = (double) engine.eval(transition.chance) * currentState.probability;
-                        neighbor.probability = oldNeighbor.probability + value;
+                        double value = (double) engine.eval(transition.chance) * oldCurrentState.probability;
+                        neighbor.probability += value;
                         currentState.probability -= value;
                     } catch (ScriptException e) {
                         e.printStackTrace();
@@ -78,6 +78,14 @@ public class Requisitos {
                 });
             currentState.visited = true;
         }
+    }
+
+    private static List<State> cloneStates(List<State> states) {
+        ArrayList<State> clonedStates = new ArrayList<>();
+        states.forEach(state -> {
+            clonedStates.add(new State(state.name, state.probability, state.visited));
+        });
+        return clonedStates;
     }
 
     private static ScriptEngine startScriptEvalEngine() {
